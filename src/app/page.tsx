@@ -1,3 +1,4 @@
+import SocialsBar from '@/components/SocialsBar'
 import { createClient } from '@/utils/supabase/client'
 
 type Post = {
@@ -32,9 +33,11 @@ export default async function BlogPage() {
             <div className="sticky top-0 bg-white py-8 z-10">
                 <div className="text-center">
                     <h1 className="text-4xl font-bold mb-4">{blogTitle}</h1>
-                    {blogDescription && (
+                    <SocialsBar />
+
+                    {/* {blogDescription && (
                         <p className="text-gray-600 text-lg">{blogDescription}</p>
-                    )}
+                    )} */}
                 </div>
             </div>
 
