@@ -2,14 +2,13 @@ import { createClient } from '@/utils/supabase/client'
 import Markdown from 'react-markdown'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import HomeIcon from '@/components/icons/HomeIcon'
 
 export const dynamic = 'force-static'
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
     const supabase = createClient();
     const author = process.env.NEXT_PUBLIC_BLOG_AUTHOR;
-    const { slug } = params;
+    const { slug } = await params;
 
     const { data: post, error } = await supabase
         .from('blog_posts')

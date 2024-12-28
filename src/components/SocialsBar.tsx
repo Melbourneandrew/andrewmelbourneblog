@@ -1,7 +1,6 @@
 import GithubIcon from "@/components/icons/github";
 import LinkedinIcon from "@/components/icons/linkedin";
 import XIcon from "@/components/icons/x";
-import DevpostIcon from "@/components/icons/devpost";
 import PortfolioIcon from "./icons/portfolio";
 
 export default function SocialsBar() {

@@ -13,7 +13,7 @@ type Post = {
 export default async function BlogPage() {
     const supabase = createClient()
     const blogTitle = process.env.NEXT_PUBLIC_BLOG_TITLE || 'Your Blog'
-    const blogDescription = process.env.NEXT_PUBLIC_BLOG_DESCRIPTION
+    // const blogDescription = process.env.NEXT_PUBLIC_BLOG_DESCRIPTION
 
     // Fetch posts from Supabase
     const { data: posts, error } = await supabase

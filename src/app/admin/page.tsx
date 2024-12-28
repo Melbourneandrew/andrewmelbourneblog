@@ -5,6 +5,7 @@ import { createClient } from '@/utils/supabase/client';
 import PlusIcon from '@/components/icons/PlusIcon';
 import TrashIcon from '@/components/icons/TrashIcon';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 interface BlogPost {
     id: number;
@@ -70,7 +71,7 @@ export default function AdminPage() {
             <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-4">
                     <h1 className="text-2xl font-bold">Blog Posts</h1>
-                    <a href="/" className="link">Go to blog</a>
+                    <Link href="/blog" className="link">Go to blog</Link>
                 </div>
                 <button
                     onClick={handleAddNew}
