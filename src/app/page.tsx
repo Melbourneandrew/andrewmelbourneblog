@@ -1,6 +1,8 @@
 import SocialsBar from '@/components/SocialsBar'
 import { createClient } from '@/utils/supabase/client'
 
+export const dynamic = 'force-static'
+
 type Post = {
     id: string
     title: string

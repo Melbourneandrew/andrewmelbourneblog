@@ -49,6 +49,6 @@ export async function createPost(prevState: { loading: boolean, error: string },
 
 
     revalidatePath('/admin');
-    revalidatePath('/blog');
+    revalidatePath('/');
     redirect('/admin');
 }
