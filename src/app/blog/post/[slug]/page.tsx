@@ -1,9 +1,33 @@
 import { createClient } from '@/utils/supabase/client'
 import Markdown from 'react-markdown'
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-static';
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const supabase = createClient();
+
+    const { data: post, error } = await supabase
+    .from('blog_posts')
+    .select('og_image, title') 
+    .eq('slug', slug)
+    .single()
+
+    if (!post) {
+        return {}; // fallback to default metadata
+    }
+
+    return {
+        title: post['title'],
+        description: "Post from Andrew Melbourne's Development Blog",
+        openGraph: {
+            images: [post['og_image']],
+        },
+    }
+}
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
     const supabase = createClient();

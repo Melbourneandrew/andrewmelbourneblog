@@ -13,6 +13,7 @@ export async function createPost(prevState: { loading: boolean, error: string },
     const content = formData.get('content') as File;
     const description = formData.get('description');
     const slug = formData.get('slug');
+    const ogImageUrl = formData.get('og-image-url') ?? '';
 
     if (!title || !content || !description || !slug) {
         return { error: 'Missing required fields', loading: false };
@@ -37,6 +38,7 @@ export async function createPost(prevState: { loading: boolean, error: string },
                 slug: slug,
                 content: markdownContent,
                 description: description,
+                og_image: ogImageUrl
             });
         if (error?.code === '23505') return { error: 'A post with this slug already exists.', loading: false };
         if (error) return { error: 'Failed to create post', loading: false };

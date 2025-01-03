@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS blog_posts (
   slug text not null UNIQUE,
   description text not null,
   content text not null,
+  og_image text null,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 

@@ -23,7 +23,7 @@ export default function NewPost() {
                         <span>{state.error}</span>
                     </div>
                 )}
-
+                {/* Title Input */}
                 <div className="form-control w-full mb-4">
                     <label className="label">
                         <span className="label-text">Post Title</span>
@@ -45,7 +45,7 @@ export default function NewPost() {
                         required
                     />
                 </div>
-
+                {/* Slug Input */}
                 <div className="form-control w-full mb-4">
                     <label className="label">
                         <span className="label-text">URL Slug (goes in the URL bar)</span>
@@ -61,7 +61,19 @@ export default function NewPost() {
                         />
                     </label>
                 </div>
-
+                {/* Open Graph Meta Image URL Input */}
+                <div className="form-control w-full mb-4">
+                    <label className="label">
+                        <span className="label-text">Open Graph Meta Image URL</span>
+                    </label>
+                    <input
+                        name="og-image-url"
+                        type="text"
+                        placeholder="Enter URL of Open Graph image"
+                        className="input input-bordered w-full"
+                    />
+                </div>
+                {/* Post Description Input */}
                 <div className="form-control w-full mb-4">
                     <label className="label">
                         <span className="label-text">Description</span>
@@ -73,7 +85,7 @@ export default function NewPost() {
                         required
                     />
                 </div>
-
+                {/* Content Markdown File Input */}
                 <div className="form-control w-full mb-6">
                     <label className="label">
                         <span className="label-text">Content (Markdown)</span>
