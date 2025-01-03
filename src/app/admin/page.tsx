@@ -6,6 +6,7 @@ import PlusIcon from '@/components/icons/PlusIcon';
 import TrashIcon from '@/components/icons/TrashIcon';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { revalidateBlogHome } from './new-post/actions';
 
 interface BlogPost {
     id: number;
@@ -71,15 +72,23 @@ export default function AdminPage() {
             <div className="flex justify-between items-center mb-6">
                 <div className="flex items-center gap-4">
                     <h1 className="text-2xl font-bold">Blog Posts</h1>
-                    <Link href="/blog" className="link">Go to blog</Link>
+                    <Link href="/" className="link">Go to blog</Link>
                 </div>
-                <button
-                    onClick={handleAddNew}
-                    className="btn btn-primary"
-                >
-                    <PlusIcon />
-                    Add New Post
-                </button>
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={revalidateBlogHome}
+                        className="btn btn-primary"
+                    >
+                        Revalidate Blog Home
+                    </button>
+                    <button
+                        onClick={handleAddNew}
+                        className="btn btn-primary"
+                    >
+                        <PlusIcon />
+                        Add New Post
+                    </button>
+                </div>
             </div>
 
             <div className="space-y-4">
