@@ -6,7 +6,7 @@ import PlusIcon from '@/components/icons/PlusIcon';
 import TrashIcon from '@/components/icons/TrashIcon';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { revalidateBlogHome } from './new-post/actions';
+import { revalidateBlogHome, deletePost } from './new-post/actions';
 
 interface BlogPost {
     id: number;
@@ -30,8 +30,6 @@ export default function AdminPage() {
             .select('*')
             .order('created_at', { ascending: false });
 
-        console.log(data);
-
         if (error) {
             console.error('Error fetching posts:', error);
             return;
@@ -41,19 +39,14 @@ export default function AdminPage() {
     };
 
     const handleDelete = async (id: number) => {
-        const supabase = createClient();
-        const { error } = await supabase
-            .from('blog_posts')
-            .delete()
-            .eq('id', id);
-
-        if (error) {
-            console.error('Error deleting post:', error);
-            return;
+        const result = await deletePost(id);
+        if (result.success) {
+            (document.getElementById('delete_modal') as HTMLDialogElement)?.close();
+            fetchBlogPosts(); // Refresh the list just in case
+        } else {
+            console.error('Error deleting post:', result.error);
+            // Optionally show an error message to the user
         }
-
-        // Refresh the posts list
-        fetchBlogPosts();
     };
 
     const [postToDelete, setPostToDelete] = useState<number | null>(null);

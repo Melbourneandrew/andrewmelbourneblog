@@ -38,7 +38,6 @@ export async function createPost(prevState: { loading: boolean, error: string },
                 content: markdownContent,
                 description: description,
             });
-        console.log(error);
         if (error?.code === '23505') return { error: 'A post with this slug already exists.', loading: false };
         if (error) return { error: 'Failed to create post', loading: false };
 
@@ -55,4 +54,25 @@ export async function createPost(prevState: { loading: boolean, error: string },
 
 export async function revalidateBlogHome() {
     revalidatePath('/');
+}
+
+export async function deletePost(postId: number) {
+    const supabase = await createClient();
+
+    try {
+        const { error } = await supabase
+            .from('blog_posts')
+            .delete()
+            .eq('id', postId);
+
+        if (error) throw error;
+
+        revalidatePath('/');
+        revalidatePath('/blog/[slug]', 'layout');
+
+        return { success: true };
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        return { success: false, error: 'Failed to delete post' };
+    }
 }

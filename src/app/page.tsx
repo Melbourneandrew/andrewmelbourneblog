@@ -12,16 +12,13 @@ type Post = {
 
 export default async function BlogPage() {
     const supabase = createClient()
-    const blogTitle = process.env.NEXT_PUBLIC_BLOG_TITLE || 'Your Blog'
-    // const blogDescription = process.env.NEXT_PUBLIC_BLOG_DESCRIPTION
+    const blogTitle = process.env.NEXT_PUBLIC_BLOG_TITLE
 
-    // Fetch posts from Supabase
     const { data: posts, error } = await supabase
         .from('blog_posts')
         .select('*')
         .order('created_at', { ascending: false })
 
-    console.log(posts);
 
     if (error) {
         console.error('Error fetching posts:', error)
@@ -34,10 +31,6 @@ export default async function BlogPage() {
                 <div className="text-center">
                     <h1 className="text-4xl font-bold mb-4">{blogTitle}</h1>
                     <SocialsBar />
-
-                    {/* {blogDescription && (
-                        <p className="text-gray-600 text-lg">{blogDescription}</p>
-                    )} */}
                 </div>
             </div>
 
