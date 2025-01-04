@@ -11,18 +11,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const supabase = createClient();
 
     const { data: post, error } = await supabase
-    .from('blog_posts')
-    .select('og_image, title') 
-    .eq('slug', slug)
-    .single()
+        .from('blog_posts')
+        .select('og_image, title, description')
+        .eq('slug', slug)
+        .single()
 
     if (!post) {
-        return {}; // fallback to default metadata
+        return {};
     }
 
+    const title = post['title'] + ' | Andrew Melbourne\'s Development Blog';
+
     return {
-        title: post['title'],
-        description: "Post from Andrew Melbourne's Development Blog",
+        title: title,
+        description: post['description'],
         openGraph: {
             images: [post['og_image']],
         },

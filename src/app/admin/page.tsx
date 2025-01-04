@@ -1,10 +1,6 @@
-'use client';
-
-import { useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/client';
 import PlusIcon from '@/components/icons/PlusIcon';
 import TrashIcon from '@/components/icons/TrashIcon';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { revalidateBlogHome, deletePost } from './new-post/actions';
 
@@ -15,50 +11,19 @@ interface BlogPost {
     created_at: string;
 }
 
-export default function AdminPage() {
-    const router = useRouter();
-    const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+async function getBlogPosts() {
+    const supabase = createClient();
+    const { data, error } = await supabase
+        .from('blog_posts')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-    useEffect(() => {
-        fetchBlogPosts();
-    }, []);
+    if (error) throw error;
+    return data || [];
+}
 
-    const fetchBlogPosts = async () => {
-        const supabase = createClient();
-        const { data, error } = await supabase
-            .from('blog_posts')
-            .select('*')
-            .order('created_at', { ascending: false });
-
-        if (error) {
-            console.error('Error fetching posts:', error);
-            return;
-        }
-
-        setBlogPosts(data || []);
-    };
-
-    const handleDelete = async (id: number) => {
-        const result = await deletePost(id);
-        if (result.success) {
-            (document.getElementById('delete_modal') as HTMLDialogElement)?.close();
-            fetchBlogPosts(); // Refresh the list just in case
-        } else {
-            console.error('Error deleting post:', result.error);
-            // Optionally show an error message to the user
-        }
-    };
-
-    const [postToDelete, setPostToDelete] = useState<number | null>(null);
-
-    const openDeleteModal = (id: number) => {
-        setPostToDelete(id);
-        (document.getElementById('delete_modal') as HTMLDialogElement)?.showModal();
-    };
-
-    const handleAddNew = () => {
-        router.push('/admin/new-post');
-    };
+export default async function AdminPage() {
+    const blogPosts = await getBlogPosts();
 
     return (
         <div className="container mx-auto p-4">
@@ -74,13 +39,13 @@ export default function AdminPage() {
                     >
                         Revalidate Blog Home
                     </button>
-                    <button
-                        onClick={handleAddNew}
+                    <Link
+                        href="/admin/new-post"
                         className="btn btn-primary"
                     >
                         <PlusIcon />
                         Add New Post
-                    </button>
+                    </Link>
                 </div>
             </div>
 
@@ -97,36 +62,19 @@ export default function AdminPage() {
                                     <h2 className="card-title">{post.title}</h2>
                                     <p className="text-sm text-gray-500">Published: {new Date(post.created_at).toLocaleString()}</p>
                                 </div>
-                                <button
-                                    onClick={() => openDeleteModal(post.id)}
-                                    className="btn btn-ghost btn-circle"
-                                >
-                                    <TrashIcon />
-                                </button>
+                                <form action={async () => {
+                                    'use server';
+                                    await deletePost(post.id);
+                                }}>
+                                    <button type="submit" className="btn btn-ghost btn-circle">
+                                        <TrashIcon />
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     ))
                 )}
             </div>
-
-            {/* Delete Confirmation Modal */}
-            <dialog id="delete_modal" className="modal">
-                <div className="modal-box">
-                    <h3 className="font-bold text-lg">Confirm Delete</h3>
-                    <p className="py-4">Are you sure you want to delete this post? This action cannot be undone.</p>
-                    <div className="modal-action">
-                        <form method="dialog" className="flex gap-2">
-                            <button
-                                className="btn btn-error"
-                                onClick={() => postToDelete && handleDelete(postToDelete)}
-                            >
-                                Delete
-                            </button>
-                            <button className="btn">Cancel</button>
-                        </form>
-                    </div>
-                </div>
-            </dialog>
         </div>
     );
 }
