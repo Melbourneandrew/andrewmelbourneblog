@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         .eq('slug', slug)
         .single()
 
-    if (!post) {
+    if (!post || error) {
         return {};
     }
 

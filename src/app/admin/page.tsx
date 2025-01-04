@@ -11,7 +11,7 @@ interface BlogPost {
     created_at: string;
 }
 
-async function getBlogPosts() {
+async function getBlogPosts(): Promise<BlogPost[]> {
     const supabase = createClient();
     const { data, error } = await supabase
         .from('blog_posts')
@@ -55,7 +55,7 @@ export default async function AdminPage() {
                         Add some posts!
                     </div>
                 ) : (
-                    blogPosts.map((post) => (
+                    blogPosts.map((post: BlogPost) => (
                         <div key={post.id} className="card bg-base-100 shadow-xl">
                             <div className="card-body flex-row items-center">
                                 <div className="flex-1">
