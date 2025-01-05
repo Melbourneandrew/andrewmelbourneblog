@@ -17,6 +17,6 @@ export default {
   },
   plugins: [daisyui, typography],
   daisyui: {
-    themes: ["lofi", "lofi"],
+    themes: ["lofi"],
   },
 } satisfies Config;

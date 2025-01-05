@@ -59,7 +59,7 @@ export default async function BlogPost({ params }: { params: Promise<{ slug: str
                     Blog Home
                 </Link>
             </div>
-            <div className="prose max-w-none">
+            <div className="prose prose-lg prose-headings:mb-1 max-w-none">
                 <Markdown>{post.content}</Markdown>
             </div>
         </article>

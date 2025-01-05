@@ -27,7 +27,7 @@ export default async function BlogPage() {
 
     return (
         <main className="container mx-auto px-4">
-            <div className="sticky top-0 bg-white py-8 z-10">
+            <div className="sticky top-0 bg-base-100 py-8 z-10">
                 <div className="text-center">
                     <h1 className="text-4xl font-bold mb-4">{blogTitle}</h1>
                     <SocialsBar />
