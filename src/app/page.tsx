@@ -22,7 +22,7 @@ export default async function BlogPage() {
 
     if (error) {
         console.error('Error fetching posts:', error)
-        return <div className="text-center font-bold text-2xl mt-10">Error loading posts</div>
+        return <div className="text-center font-bold text-2xl mt-10">Posts are not available right now 😔</div>
     }
 
     return (
