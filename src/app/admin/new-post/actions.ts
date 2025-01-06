@@ -48,13 +48,14 @@ export async function createPost(prevState: { loading: boolean, error: string },
         return { error: 'Failed to create post', loading: false };
     }
 
-
+    revalidatePath('/blog/[slug]', 'layout');
     revalidatePath('/admin');
     revalidatePath('/');
     redirect('/admin');
 }
 
 export async function revalidateBlogHome() {
+    revalidatePath('/blog/[slug]', 'layout');
     revalidatePath('/');
 }
 
