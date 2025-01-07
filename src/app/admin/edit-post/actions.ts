@@ -4,15 +4,24 @@ import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
+interface BlogPostUpdateData {
+    title: string;
+    slug: string;
+    description: string;
+    og_image: string;
+    created_at: string;
+    content?: string;
+}
+
 export async function editPost(formData: FormData) {
     const supabase = await createClient();
-    const postId = formData.get('postId');
-    const title = formData.get('title');
+    const postId = formData.get('postId')?.toString();
+    const title = formData.get('title')?.toString();
     const content = formData.get('content') as File | null;
-    const description = formData.get('description');
-    const slug = formData.get('slug');
-    const ogImageUrl = formData.get('og-image-url') ?? '';
-    const createdAt = formData.get('created-at');
+    const description = formData.get('description')?.toString();
+    const slug = formData.get('slug')?.toString();
+    const ogImageUrl = (formData.get('og-image-url') ?? '').toString();
+    const createdAt = formData.get('created-at')?.toString();
 
     if (!postId || !title || !description || !slug || !createdAt) {
         throw new Error('Missing required fields');
@@ -24,7 +33,7 @@ export async function editPost(formData: FormData) {
     }
 
     try {
-        const updateData: any = {
+        const updateData: BlogPostUpdateData = {
             title,
             slug,
             description,
