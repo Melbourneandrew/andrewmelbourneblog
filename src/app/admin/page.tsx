@@ -3,12 +3,14 @@ import PlusIcon from '@/components/icons/PlusIcon';
 import TrashIcon from '@/components/icons/TrashIcon';
 import Link from 'next/link';
 import { revalidateBlogHome, deletePost } from './new-post/actions';
+import { EditIcon } from '@/components/icons/EditIcon';
 
 interface BlogPost {
     id: number;
     title: string;
     content: string;
     created_at: string;
+    slug: string;
 }
 
 async function getBlogPosts(): Promise<BlogPost[]> {
@@ -62,14 +64,22 @@ export default async function AdminPage() {
                                     <h2 className="card-title">{post.title}</h2>
                                     <p className="text-sm text-gray-500">Published: {new Date(post.created_at).toLocaleString()}</p>
                                 </div>
-                                <form action={async () => {
-                                    'use server';
-                                    await deletePost(post.id);
-                                }}>
-                                    <button type="submit" className="btn btn-ghost btn-circle">
-                                        <TrashIcon />
-                                    </button>
-                                </form>
+                                <div className="flex gap-2">
+                                    <Link
+                                        href={`/admin/edit-post?id=${post.id}`}
+                                        className="btn btn-ghost btn-circle"
+                                    >
+                                        <EditIcon />
+                                    </Link>
+                                    <form action={async () => {
+                                        'use server';
+                                        await deletePost(post.id);
+                                    }}>
+                                        <button type="submit" className="btn btn-ghost btn-circle">
+                                            <TrashIcon />
+                                        </button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     ))

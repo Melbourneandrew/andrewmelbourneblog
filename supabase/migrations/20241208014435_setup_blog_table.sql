@@ -28,3 +28,9 @@ CREATE POLICY "Anyone can read posts" ON blog_posts
 FOR SELECT
 TO public
 USING (true);
+
+-- Create policy to allow authenticated users to update posts
+CREATE POLICY "Users can update posts" ON blog_posts
+FOR UPDATE
+TO authenticated
+USING (true);

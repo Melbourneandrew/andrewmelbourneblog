@@ -5,9 +5,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function createPost(prevState: { loading: boolean, error: string }, formData: FormData) {
-    // Set loading state
-    // const loadingState = { loading: true };
-
     const supabase = await createClient();
     const title = formData.get('title');
     const content = formData.get('content') as File;
