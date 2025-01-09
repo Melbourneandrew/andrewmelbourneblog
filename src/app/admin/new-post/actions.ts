@@ -45,14 +45,13 @@ export async function createPost(prevState: { loading: boolean, error: string },
         return { error: 'Failed to create post', loading: false };
     }
 
-    revalidatePath('/blog/[slug]', 'layout');
     revalidatePath('/admin');
     revalidatePath('/');
     redirect('/admin');
 }
 
 export async function revalidateBlogHome() {
-    revalidatePath('/blog/[slug]', 'layout');
+    revalidatePath('/blog/post/[slug]', 'layout');
     revalidatePath('/');
 }
 
@@ -68,7 +67,7 @@ export async function deletePost(postId: number) {
         if (error) throw error;
 
         revalidatePath('/');
-        revalidatePath('/blog/[slug]', 'layout');
+        revalidatePath('/blog/post/[slug]', 'layout');
 
         return { success: true };
     } catch (error) {

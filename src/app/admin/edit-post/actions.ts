@@ -63,7 +63,7 @@ export async function editPost(formData: FormData) {
         throw error;
     }
 
-    revalidatePath('/blog/[slug]', 'layout');
+    revalidatePath('/blog/post/[slug]', 'layout');
     revalidatePath('/admin');
     revalidatePath('/');
     redirect('/admin');
