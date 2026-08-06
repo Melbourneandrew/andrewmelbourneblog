@@ -1,31 +1,12 @@
-import { createClient } from '@/utils/supabase/client';
+import { getPosts } from '@/lib/db';
 import PlusIcon from '@/components/icons/PlusIcon';
 import TrashIcon from '@/components/icons/TrashIcon';
 import Link from 'next/link';
 import { revalidateBlogHome, deletePost } from './new-post/actions';
 import { EditIcon } from '@/components/icons/EditIcon';
 
-interface BlogPost {
-    id: number;
-    title: string;
-    content: string;
-    created_at: string;
-    slug: string;
-}
-
-async function getBlogPosts(): Promise<BlogPost[]> {
-    const supabase = createClient();
-    const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-    if (error) throw error;
-    return data || [];
-}
-
 export default async function AdminPage() {
-    const blogPosts = await getBlogPosts();
+    const blogPosts = getPosts();
 
     return (
         <div className="container mx-auto p-4">
@@ -57,7 +38,7 @@ export default async function AdminPage() {
                         Add some posts!
                     </div>
                 ) : (
-                    blogPosts.map((post: BlogPost) => (
+                    blogPosts.map((post) => (
                         <div key={post.id} className="card bg-base-100 shadow-xl">
                             <div className="card-body flex-row items-center">
                                 <div className="flex-1">

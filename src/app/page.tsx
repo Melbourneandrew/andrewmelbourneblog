@@ -1,29 +1,11 @@
 import SocialsBar from '@/components/SocialsBar'
-import { createClient } from '@/utils/supabase/client'
+import { getPosts } from '@/lib/db'
 
-type Post = {
-    id: string
-    title: string
-    content: string
-    description: string
-    created_at: string
-    slug: string
-}
+export const dynamic = 'force-dynamic';
 
 export default async function BlogPage() {
-    const supabase = createClient()
     const blogTitle = process.env.NEXT_PUBLIC_BLOG_TITLE
-
-    const { data: posts, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .order('created_at', { ascending: false })
-
-
-    if (error) {
-        console.error('Error fetching posts:', error)
-        return <div className="text-center font-bold text-2xl mt-10">Posts are not available right now 😔</div>
-    }
+    const posts = getPosts()
 
     return (
         <main className="container mx-auto px-4">
@@ -38,7 +20,7 @@ export default async function BlogPage() {
                 {posts?.length === 0 ? (
                     <p className="text-gray-600 text-center">No posts yet!</p>
                 ) : (
-                    posts?.map((post: Post, index: number) => (
+                    posts.map((post, index) => (
                         <div key={post.id} className="contents">
                             <a
                                 href={`/blog/post/${post.slug}`}

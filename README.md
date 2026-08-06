@@ -1,40 +1,19 @@
-## Simple Blog with Next.js and Supabase as CMS
-This is a simple blog starter kit built with Supabase and Next.js.
+# Andrew Melbourne's Blog
 
-While you can use this as a blog out of the box, it's designed to be extended and customized.
-Posts are uploaded as markdown files, and are stored in a blog_posts table in Supabase.
+A small Next.js blog.
 
-### Getting Started
+## Architecture
 
-1. Clone this repository
-2. Run the setup script:
-   ```bash
-   npm i && npm run setup
-   ```
+- Next.js serves the website and admin pages.
+- SQLite stores posts and the admin login locally.
+- PM2 keeps the app running on the server.
 
-The setup script will:
-- Create a `.env` file from the template
-- Prompt you for basic blog configuration:
-  - Blog title
-  - Blog description
-  - Author name
-- Start a local Supabase instance
-- Configure your Supabase credentials automatically
-- Run database migrations
-- Create an admin user for the blog management interface
+## Run locally
 
-During setup, you'll be prompted to:
-1. Enter your blog details
-2. Create an admin account by providing:
-   - Email address
-   - Password (or let the system generate one)
+```bash
+cp .env.template .env
+npm install
+npm run dev
+```
 
-After setup completes, you'll receive:
-- Supabase Dashboard URL for database management
-- Admin login credentials for the blog interface
-- Confirmation that all migrations have been applied
-
-Keep your admin credentials safe - you'll need them to access the blog management interface.
-Note: Public user signups are disabled by default. The only way to create a user account is through the initial setup script. This is a security measure to ensure that only authorized administrators can access the blog management interface.
-
-Navigate to the blog management interface at `http://localhost:3000/admin` to start creating and managing blog posts.
+Set `BLOG_SESSION_SECRET` to a random value of at least 32 characters. SQLite creates `data/blog.db` automatically.
