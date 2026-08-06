@@ -6,11 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "import-posts": "node scripts/import-posts.mjs"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.47.2",
+    "better-sqlite3": "^12.11.1",
+    "bcryptjs": "^3.0.2",
+    "jose": "^5.9.6",
     "next": "15.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^20",
+    "@types/better-sqlite3": "^7.6.12",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "daisyui": "^4.12.14",

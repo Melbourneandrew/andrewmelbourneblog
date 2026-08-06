@@ -1,22 +1,16 @@
-import { createClient } from '@/utils/supabase/client'
+import { getPostBySlug } from '@/lib/db'
 import Markdown from 'react-markdown'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 
-export const dynamic = 'force-static';
+export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
-    const supabase = createClient();
+    const post = getPostBySlug(slug)
 
-    const { data: post, error } = await supabase
-        .from('blog_posts')
-        .select('og_image, title, description')
-        .eq('slug', slug)
-        .single()
-
-    if (!post || error) {
+    if (!post) {
         return {};
     }
 
@@ -26,32 +20,28 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         title: title,
         description: post['description'],
         openGraph: {
-            images: [post['og_image']],
+            images: post['og_image'] ? [post['og_image']] : [],
         },
     }
 }
 
 export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
-    const supabase = createClient();
     const author = process.env.NEXT_PUBLIC_BLOG_AUTHOR || "Andrew Melbourne";
     const { slug } = await params;
 
-    const { data, error } = await supabase
-        .from('blog_posts')
-        .select('title, description, content, created_at')
-        .eq('slug', slug)
-        .single()
-
-    let post = data;
+    let post = getPostBySlug(slug);
 
     const dummyPost = {
+        id: 'dummy',
+        slug: 'dummy',
         title: "Example Blog Post",
         description: "This is a placeholder blog post.",
         content: "# Welcome!\n\nThis is an example blog post. The actual content could not be loaded.",
+        og_image: null,
         created_at: new Date().toISOString(),
     };
 
-    if (error || !post) {
+    if (!post) {
         if (slug === 'dummy') {
             post = dummyPost;
         } else {

@@ -1,40 +1,50 @@
-## Simple Blog with Next.js and Supabase as CMS
-This is a simple blog starter kit built with Supabase and Next.js.
+# Andrew Melbourne's Blog
 
-While you can use this as a blog out of the box, it's designed to be extended and customized.
-Posts are uploaded as markdown files, and are stored in a blog_posts table in Supabase.
+A Next.js blog backed by a single local SQLite database. Posts are authored as Markdown files through the admin UI.
 
-### Getting Started
+## Setup
 
-1. Clone this repository
-2. Run the setup script:
-   ```bash
-   npm i && npm run setup
-   ```
+```bash
+cp .env.example .env
+npm install
+npm run dev
+```
 
-The setup script will:
-- Create a `.env` file from the template
-- Prompt you for basic blog configuration:
-  - Blog title
-  - Blog description
-  - Author name
-- Start a local Supabase instance
-- Configure your Supabase credentials automatically
-- Run database migrations
-- Create an admin user for the blog management interface
+Set a strong `BLOG_ADMIN_PASSWORD` and generate the session secret with:
 
-During setup, you'll be prompted to:
-1. Enter your blog details
-2. Create an admin account by providing:
-   - Email address
-   - Password (or let the system generate one)
+```bash
+openssl rand -hex 32
+```
 
-After setup completes, you'll receive:
-- Supabase Dashboard URL for database management
-- Admin login credentials for the blog interface
-- Confirmation that all migrations have been applied
+The SQLite database is created automatically at `BLOG_DATABASE_PATH`. The database and its WAL sidecars are ignored by Git and must be backed up separately.
 
-Keep your admin credentials safe - you'll need them to access the blog management interface.
-Note: Public user signups are disabled by default. The only way to create a user account is through the initial setup script. This is a security measure to ensure that only authorized administrators can access the blog management interface.
+## Import posts from Supabase/PostgreSQL
 
-Navigate to the blog management interface at `http://localhost:3000/admin` to start creating and managing blog posts.
+Only the PostgreSQL `db` service is needed for the one-time export. From the existing Supabase Compose directory:
+
+```bash
+docker compose up -d --no-deps db
+docker exec supabase-db psql -U postgres -d postgres -Atc \
+  "select json_build_object(
+    'posts', (select coalesce(json_agg(p), '[]'::json) from (select id,title,slug,description,content,og_image,created_at from public.blog_posts order by created_at) p),
+    'users', (select coalesce(json_agg(u), '[]'::json) from (select id,email,encrypted_password as password_hash from auth.users) u)
+  )" \
+  > posts.json
+docker compose stop db
+```
+
+Copy `posts.json` into the application directory and import it:
+
+```bash
+npm run import-posts -- posts.json
+```
+
+The importer preserves posts and the existing admin email/password hash. It is idempotent: rows with an existing ID are updated. Verify the post count, login, and pages before retiring the PostgreSQL data.
+
+## Production
+
+The process user needs read/write access to the directory containing `BLOG_DATABASE_PATH`. Back up the database with SQLite's online backup command while the app is running:
+
+```bash
+sqlite3 data/blog.db ".backup 'blog-backup.db'"
+```

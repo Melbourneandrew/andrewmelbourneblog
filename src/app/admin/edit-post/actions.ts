@@ -1,6 +1,6 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { getPostById, updatePost } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
@@ -14,7 +14,6 @@ interface BlogPostUpdateData {
 }
 
 export async function editPost(formData: FormData) {
-    const supabase = await createClient();
     const postId = formData.get('postId')?.toString();
     const title = formData.get('title')?.toString();
     const content = formData.get('content') as File | null;
@@ -33,6 +32,8 @@ export async function editPost(formData: FormData) {
     }
 
     try {
+        const existing = getPostById(postId);
+        if (!existing) throw new Error('Post not found');
         const updateData: BlogPostUpdateData = {
             title,
             slug,
@@ -47,17 +48,7 @@ export async function editPost(formData: FormData) {
             updateData.content = markdownContent;
         }
 
-        console.log(updateData);
-
-        const { error, data } = await supabase
-            .from('blog_posts')
-            .update(updateData)
-            .eq('id', postId);
-
-        console.log('Supabase response:', { error, data });
-
-        if (error?.code === '23505') throw new Error('A post with this slug already exists.');
-        if (error) throw new Error(`Failed to update post: ${error.message}`);
+        updatePost({ ...existing, ...updateData });
     } catch (error) {
         console.error('Error updating post:', error);
         throw error;

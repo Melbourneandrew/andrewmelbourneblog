@@ -1,11 +1,10 @@
 'use server';
 
-import { createClient } from '@/utils/supabase/server';
+import { createPost as insertPost, deletePost as removePost } from '@/lib/db';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function createPost(prevState: { loading: boolean, error: string }, formData: FormData) {
-    const supabase = await createClient();
     const title = formData.get('title');
     const content = formData.get('content') as File;
     const description = formData.get('description');
@@ -28,17 +27,8 @@ export async function createPost(prevState: { loading: boolean, error: string },
     const markdownContent = await content.text();
 
     try {
-        const { error } = await supabase
-            .from('blog_posts')
-            .insert({
-                title: title,
-                slug: slug,
-                content: markdownContent,
-                description: description,
-                og_image: ogImageUrl
-            });
-        if (error?.code === '23505') return { error: 'A post with this slug already exists.', loading: false };
-        if (error) return { error: 'Failed to create post', loading: false };
+        insertPost({ title: title.toString(), slug: slug.toString(), content: markdownContent,
+            description: description.toString(), og_image: ogImageUrl.toString() || null });
 
     } catch (error) {
         console.error('Error saving post:', error);
@@ -55,16 +45,9 @@ export async function revalidateBlogHome() {
     revalidatePath('/');
 }
 
-export async function deletePost(postId: number) {
-    const supabase = await createClient();
-
+export async function deletePost(postId: string) {
     try {
-        const { error } = await supabase
-            .from('blog_posts')
-            .delete()
-            .eq('id', postId);
-
-        if (error) throw error;
+        removePost(postId);
 
         revalidatePath('/');
         revalidatePath('/blog/post/[slug]', 'layout');

@@ -1,20 +1,13 @@
-import { createClient } from '@/utils/supabase/server';
+import { getPostById } from '@/lib/db';
 import { editPost } from './actions';
 import { redirect } from 'next/navigation';
 
 async function getPost(id: string) {
-    const supabase = await createClient();
-    const { data, error } = await supabase
-        .from('blog_posts')
-        .select('*')
-        .eq('id', id)
-        .single();
-
-    if (error || !data) {
+    const post = getPostById(id);
+    if (!post) {
         redirect('/admin');
     }
-
-    return data;
+    return post;
 }
 
 export default async function EditPostPage({
@@ -92,7 +85,7 @@ export default async function EditPostPage({
                         type="text"
                         id="og-image-url"
                         name="og-image-url"
-                        defaultValue={post.og_image}
+                        defaultValue={post.og_image ?? ''}
                         className="input input-bordered w-full"
                     />
                 </div>
