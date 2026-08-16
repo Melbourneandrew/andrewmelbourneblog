@@ -12,7 +12,7 @@ export default function SocialsBar() {
         devpost: "https://devpost.com/Melbourneandrew",
         huggingface: "https://huggingface.co/M3LBY",
         portfolio: "https://melbournedev.com",
-        reading: "https://reading.melbourndev.com",
+        reading: "https://reading.melbournedev.com",
     };
 
     return (
