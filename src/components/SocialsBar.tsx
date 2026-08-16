@@ -2,6 +2,7 @@ import GithubIcon from "@/components/icons/github";
 import LinkedinIcon from "@/components/icons/linkedin";
 import XIcon from "@/components/icons/x";
 import PortfolioIcon from "./icons/portfolio";
+import OpenBookIcon from "./icons/open-book";
 
 export default function SocialsBar() {
     const links = {
@@ -62,7 +63,7 @@ export default function SocialsBar() {
                 className="flex flex-row gap-1"
                 href={links.reading}
             >
-                <span aria-hidden="true" className="text-xl leading-6">◫</span> Reading
+                <OpenBookIcon /> Reading
             </a>
         </div>
     );
