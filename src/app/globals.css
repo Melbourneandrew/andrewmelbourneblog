@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
-a {
-  text-decoration: underline;
+@layer base {
+  :root {
+    --ink: #111827;
+    --muted: #4b5563;
+    --paper: #ffffff;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--muted);
+    text-decoration: none;
+  }
 }
