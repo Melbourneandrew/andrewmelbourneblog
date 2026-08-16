@@ -3,9 +3,13 @@ import { mkdirSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 
 export type BlogPost = { id: string; title: string; slug: string; description: string; content: string; og_image: string | null; created_at: string };
-const databasePath = resolve(process.env.BLOG_DATABASE_PATH || 'data/blog.db');
+const defaultDatabasePath = process.env.NODE_ENV === 'production'
+  ? 'data/blog-production.db'
+  : 'data/blog.db';
+const databasePath = resolve(process.env.BLOG_DATABASE_PATH || defaultDatabasePath);
 mkdirSync(dirname(databasePath), { recursive: true });
 const db = new Database(databasePath);
+db.pragma('busy_timeout = 5000');
 db.pragma('journal_mode = WAL');
 db.exec(`CREATE TABLE IF NOT EXISTS blog_posts (
   id TEXT PRIMARY KEY, title TEXT NOT NULL, slug TEXT NOT NULL UNIQUE,
