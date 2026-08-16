@@ -7,10 +7,11 @@ export default function SocialsBar() {
     const links = {
         github: "https://github.com/Melbourneandrew",
         linkedin: "https://www.linkedin.com/in/melbourneandrew/",
-        twitter: "https://x.com/andrew_melby",
+        twitter: "https://x.com/melbourneandrew",
         devpost: "https://devpost.com/Melbourneandrew",
         huggingface: "https://huggingface.co/M3LBY",
         portfolio: "https://melbournedev.com",
+        reading: "https://reading.melbourndev.com",
     };
 
     return (
@@ -54,6 +55,14 @@ export default function SocialsBar() {
                 href={links.portfolio}
             >
                 <PortfolioIcon /> Portfolio
+            </a>
+            <a
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex flex-row gap-1"
+                href={links.reading}
+            >
+                <span aria-hidden="true" className="text-xl leading-6">◫</span> Reading
             </a>
         </div>
     );
