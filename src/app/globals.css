@@ -25,4 +25,8 @@
     color: var(--muted);
     text-decoration: none;
   }
+
+  .post-card:hover {
+    color: inherit;
+  }
 }
