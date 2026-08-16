@@ -24,7 +24,7 @@ export default async function BlogPage() {
                         <div key={post.id} className="contents">
                             <a
                                 href={`/blog/post/${post.slug}`}
-                                className="w-full max-w-2xl p-6 hover:bg-gray-100 transition-all duration-200 rounded-lg cursor-pointer no-underline"
+                                className="post-card w-full max-w-2xl p-6 hover:bg-gray-100 transition-colors duration-200 rounded-lg cursor-pointer no-underline"
                             >
                                 <div className="flex flex-col gap-2">
                                     <div className="flex items-center justify-between">
